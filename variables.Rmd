@@ -1,0 +1,54 @@
+---
+title: "Diccionario variables"
+author: "Sebastian Massa"
+date: "8/24/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE, warning = FALSE, message = FALSE, echo = FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(readr)
+library(tidyverse)
+library(janitor)
+library(highcharter)
+library(htmlTable)
+
+```
+
+## Nombres de variables
+
+```{r nombre, message = FALSE, echo = TRUE, warning = FALSE, include = TRUE}
+
+data <- readr::read_csv(file = "datos/multipleChoiceResponses.csv", 
+                        col_names = TRUE)
+
+data_chile <- data %>% dplyr::filter(Country == "Chile")
+
+data_chile <- data_chile %>% janitor::clean_names()
+
+x <- names(data_chile)
+y <- seq(1, length(x), by = 1)
+z <- sapply(data_chile, class)
+
+variables <- data.frame(Nombre = x, Posición = y, Tipo_variable = z) 
+row.names(variables) <- NULL
+
+knitr::kable(variables)
+
+```
+
+
+## Listado de etiquetas
+
+
+```{r etiquetas, echo = TRUE, warning = FALSE, include = TRUE}
+
+etiquetas <- apply(data_chile, 2, unique)
+
+etiquetas_tibble <- tibble::enframe(etiquetas)
+
+etiquetas_tibble$value
+
+```
+
